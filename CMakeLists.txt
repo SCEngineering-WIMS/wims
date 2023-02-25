@@ -25,7 +25,8 @@ FetchContent_MakeAvailable(Crow)
 
 # Add include directory
 include_directories(
-    include/
+    PRIVATE
+        include/
 )
 
 add_executable(

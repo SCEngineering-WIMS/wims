@@ -11,9 +11,9 @@ int main()
     wims::Resistor resistor1234("R1234", "Altronics");
     wims::Resistor resistor5678("R5678", "JayCar");
 
-    std::function<const std::string()> containerId = std::bind(&wims::Container::id, container);
+    std::function<const std::string()> containerId = std::bind(&wims::Container::id, std::ref(container));
     std::function<const std::string()> containerComponents
-        = std::bind(&wims::Container::componentsAsString, container);
+        = std::bind(&wims::Container::componentsAsString, std::ref(container));
 
     container.addComponent(resistor1234);
     container.addComponent(resistor5678);

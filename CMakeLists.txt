@@ -23,9 +23,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(Crow)
 
+find_package(SQLite3 REQUIRED)
+
 # Add include directory
 include_directories(
-    include/
+    PRIVATE
+        include/
 )
 
 add_executable(
@@ -35,6 +38,7 @@ add_executable(
 
 target_link_libraries(
     ${PROJECT_NAME}
-    PUBLIC
+    PRIVATE
         Crow::Crow
+        SQLite::SQLite3
 )

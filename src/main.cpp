@@ -1,17 +1,36 @@
+#include "inventory/container.hpp"
+#include "inventory/resistor.hpp"
+#include "web/server.hpp"
 
-#include <crow.h>
+#include <functional>
 
 int main()
 {
-    crow::SimpleApp app; //define your crow application
+    wims::Container container("resistors");
+    
+    wims::Resistor resistor1234("R1234", "Altronics");
+    wims::Resistor resistor5678("R5678", "JayCar");
 
-    //define your endpoint at the root directory
-    CROW_ROUTE(app, "/")([](){
-        return "Hello World";
-    });
+    std::function<const std::string()> containerId = std::bind(&wims::Container::id, std::ref(container));
+    std::function<const std::string()> containerComponents
+        = std::bind(&wims::Container::componentsAsString, std::ref(container));
 
-    //set the port, set the app to run on multiple threads, and run the app
-    app.bindaddr("192.168.50.110").port(8080).multithreaded().run();
+    container.addComponent(resistor1234);
+    container.addComponent(resistor5678);
+
+    std::cout << container.componentsAsString() << std::endl;
+
+    for(const auto part : container.components())
+    {
+        std::cout << part.partNumber() << std::endl;
+    }
+
+    wims::WimServer server("127.0.0.1", 8080);
+
+    CROW_ROUTE(server.application(), "/container/")(containerId);
+    CROW_ROUTE(server.application(), "/parts/")(containerComponents);
+
+    server.start();
 
     return 0;
 }

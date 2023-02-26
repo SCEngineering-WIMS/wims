@@ -1,2 +1,4 @@
 # build directory
-built/
+build/
+
+.vscode/*
